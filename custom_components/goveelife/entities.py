@@ -59,7 +59,7 @@ class GoveeLifePlatformEntity(CoordinatorEntity, Entity):
             #self._entity_category = None
 
             self._entity_id = self._name.lower()
-            self.uniqueid = self._identifier + '_' + self._entity_id
+            self.uniqueid = None #device_cfg.get('device')
 
             self._attributes = {}
             #self._attributes['description'] = self._entity_cfg.get('description', None)
