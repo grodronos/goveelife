@@ -79,6 +79,7 @@ class GoveeLifeHumidifier(HumidifierEntity, GoveeLifePlatformEntity):
         """Platform specific initialization actions."""
         _LOGGER.debug("%s - %s: _init_platform_specific", self._api_id, self._identifier)
         self.device_class = self._device_cfg.get('type', [])
+        self.uniqueid = f"{self._identifier}_{self._entity_id}"
         if self.device_class == "devices.types.humidifier":
             self._attr_device_class = HumidifierDeviceClass.HUMIDIFIER
         elif self.device_class == "devices.types.dehumidifier":
