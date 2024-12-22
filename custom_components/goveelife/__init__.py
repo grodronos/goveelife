@@ -1,6 +1,7 @@
 """Init for the Govee Life integration."""
-
 from __future__ import annotations
+from .GoveeApi.UserDevices.controller import Controller
+from .GoveeApi.UserDevices.models import Device
 from typing import Final
 import logging
 import asyncio
@@ -49,6 +50,22 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     except Exception as e:
         _LOGGER.error("%s - async_setup_entry: Creating data store failed: %s (%s.%s)", entry.entry_id, str(e), e.__class__.__module__, type(e).__name__)
         return False
+
+    _LOGGER.debug("grodronos")
+    controller = Controller(api_key=str(entry_data[CONF_PARAMS].get(CONF_API_KEY, None)))
+
+    try:
+        # Získání zařízení
+        devices: List[Device] = await controller.getDevices(hass)
+
+        # Výpis zařízení
+        _LOGGER.debug("Získáno zařízení: %s", str(len(devices)))
+        for device in devices:
+            _LOGGER.debug("Zařízení: %s (%s)", str(device.deviceName), str(device.device))
+            for capability in device.capabilities:
+                _LOGGER.debug("  - %s", str(capability.instance))
+    except Exception as e:
+        _LOGGER.error("Chyba: %s", str(e))
 
     try:
         _LOGGER.debug("%s - async_setup_entry: Receiving cloud devices..", entry.entry_id)

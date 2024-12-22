@@ -38,7 +38,7 @@ _LOGGER: Final = logging.getLogger(__name__)
 class GoveeLifePlatformEntity(CoordinatorEntity, Entity):
     """Base class for Govee Life integration."""
 
-    def __init__(self, hass: HomeAssistant, entry: ConfigEntry, coordinator, device_cfg, **kwargs) -> None:
+    def __init__(self, hass: HomeAssistant, entry: ConfigEntry, coordinator, device_cfg, platform, cap, **kwargs) -> None:
         """Initialize the entity."""
         try:
             platform = kwargs.get('platform', 'entities')
@@ -51,15 +51,15 @@ class GoveeLifePlatformEntity(CoordinatorEntity, Entity):
             self._entry_id = self._entry.entry_id
             self.hass = hass
 
-            self._name = self._device_cfg.get('deviceName')
+            self._name = self._device_cfg.get('deviceName') + '_' + cap.get('instance',STATE_UNKNOWN)
             
             #self._icon = None
             #self._device_class = None
             #self._unit_of_measurement = None
             #self._entity_category = None
 
-            self._entity_id = self._name.lower()
-            self.uniqueid = None #device_cfg.get('device')
+            self._entity_id = self._name.lower() + '_' + cap.get('instance',STATE_UNKNOWN)
+            self.uniqueid = self._identifier + '_' + self._entity_id
 
             self._attributes = {}
             #self._attributes['description'] = self._entity_cfg.get('description', None)
